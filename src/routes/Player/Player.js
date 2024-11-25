@@ -160,10 +160,28 @@ const Player = ({ urlParams, queryParams }) => {
         video.setProp('volume', volume);
     }, []);
 
+    // use only for SeekBar!
+    // Clicking on the SeekBar needs to send exactly 1 state change
+    // while sliding does nothing.
+    // In the other seek places, we need for the user to stop the seek (with arrow keys for example)
     const onSeekRequested = React.useCallback((time) => {
-        !seeking && setSeeking(true);
+        // make sure to update TimeChanged first
+        if (video.state.time !== null && !isNaN(video.state.time) &&
+            video.state.duration !== null && !isNaN(video.state.duration) &&
+            video.state.manifest !== null && typeof video.state.manifest.name === 'string') {
+            timeChanged(video.state.time, video.state.duration, video.state.manifest.name);
+        }
+
+        setSeeking(true);
         video.setProp('time', time);
-    }, []);
+        if (video.state.time !== null && !isNaN(video.state.time) &&
+            video.state.duration !== null && !isNaN(video.state.duration) &&
+            video.state.manifest !== null && typeof video.state.manifest.name === 'string') {
+            console.error('here!');
+            seek(time, video.state.duration, video.state.manifest.name);
+        }
+        setSeeking(false);
+    }, [video.state.time, video.state.duration, video.state.manifest]);
 
     const onPlaybackSpeedChanged = React.useCallback((rate) => {
         video.setProp('playbackSpeed', rate);
@@ -349,12 +367,15 @@ const Player = ({ urlParams, queryParams }) => {
         if (video.state.time !== null && !isNaN(video.state.time) &&
             video.state.duration !== null && !isNaN(video.state.duration) &&
             video.state.manifest !== null && typeof video.state.manifest.name === 'string') {
-            seeking ?
-                seek(video.state.time, video.state.duration, video.state.manifest.name)
-                :
+            if (seeking) {
+                seek(video.state.time, video.state.duration, video.state.manifest.name);
+                // console.warn('Send Seek action');
+            } else {
                 timeChanged(video.state.time, video.state.duration, video.state.manifest.name);
+                // console.warn('Send TimeChanged action');
+            }
         }
-    }, [video.state.time, video.state.duration, video.state.manifest]);
+    }, [video.state.time, video.state.duration, video.state.manifest, seeking]);
 
     React.useEffect(() => {
         if (video.state.paused !== null) {
@@ -483,18 +504,30 @@ const Player = ({ urlParams, queryParams }) => {
 
                     break;
                 }
+                // make sure to set Seeking (if not set already)
+                // and update the time property to send the Seek Action
+                // accordingly.
+                // Continuously holding the arrow key should not trigger TimeChanged
+                // until releasing.
                 case 'ArrowRight': {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
                         const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
-                        onSeekRequested(video.state.time + seekDuration);
+                        !seeking && setSeeking(true);
+                        video.setProp('time', video.state.time + seekDuration);
                     }
 
                     break;
                 }
+                // make sure to set Seeking (if not set already)
+                // and update the time property to send the Seek Action
+                // accordingly.
+                // Continuously holding the arrow key should not trigger TimeChanged
+                // until releasing.
                 case 'ArrowLeft': {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
                         const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
-                        onSeekRequested(video.state.time - seekDuration);
+                        !seeking && setSeeking(true);
+                        video.setProp('time', video.state.time - seekDuration);
                     }
 
                     break;
@@ -562,8 +595,11 @@ const Player = ({ urlParams, queryParams }) => {
             }
         };
         const onKeyUp = (event) => {
+            // stops the seeking propagation if user holds the arrow continually
+            // this ensures TimeCHanged is only send when you stop holding the button
             if (event.code === 'ArrowRight' || event.code === 'ArrowLeft') {
-                seeking && setSeeking(false);
+                console.warn('Key Up for Arrows! Stop seek!');
+                setSeeking(false);
             }
         };
         const onWheel = ({ deltaY }) => {

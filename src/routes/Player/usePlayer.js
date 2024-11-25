@@ -81,7 +81,6 @@ const usePlayer = (urlParams) => {
                 }
             };
         } else {
-            console.warn('Player Unload triggered');
             return {
                 action: 'Unload'
             };
@@ -97,21 +96,23 @@ const usePlayer = (urlParams) => {
         }, 'player');
     }, []);
     const timeChanged = React.useCallback((time, duration, device) => {
+        console.log('Time changed triggered: '+ time);
         core.transport.dispatch({
             action: 'Player',
             args: {
                 action: 'TimeChanged',
-                args: { time, duration, device }
+                args: { time: Math.round(time), duration, device }
             }
         }, 'player');
     }, []);
 
     const seek = React.useCallback((time, duration, device) => {
+        console.log('Seek triggered: ' + time);
         core.transport.dispatch({
             action: 'Player',
             args: {
                 action: 'Seek',
-                args: { time, duration, device }
+                args: { time: Math.round(time), duration, device }
             }
         }, 'player');
     }, []);
