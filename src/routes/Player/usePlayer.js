@@ -96,25 +96,35 @@ const usePlayer = (urlParams) => {
         }, 'player');
     }, []);
     const timeChanged = React.useCallback((time, duration, device) => {
-        console.log('Time changed triggered: '+ time);
-        core.transport.dispatch({
-            action: 'Player',
-            args: {
-                action: 'TimeChanged',
-                args: { time: Math.round(time), duration, device }
-            }
-        }, 'player');
+        if (typeof time === 'number' && typeof duration === 'number' && typeof device === 'string') {
+            core.transport.dispatch({
+                action: 'Player',
+                args: {
+                    action: 'TimeChanged',
+                    args: {
+                        time: Math.round(time),
+                        duration,
+                        device,
+                    }
+                }
+            }, 'player');
+        }
     }, []);
 
     const seek = React.useCallback((time, duration, device) => {
-        console.log('Seek triggered: ' + time);
-        core.transport.dispatch({
-            action: 'Player',
-            args: {
-                action: 'Seek',
-                args: { time: Math.round(time), duration, device }
-            }
-        }, 'player');
+        if (typeof time === 'number' && typeof duration === 'number' && typeof device === 'string') {
+            core.transport.dispatch({
+                action: 'Player',
+                args: {
+                    action: 'Seek',
+                    args: {
+                        time: Math.round(time),
+                        duration,
+                        device,
+                    }
+                }
+            }, 'player');
+        }
     }, []);
 
     const ended = React.useCallback(() => {
