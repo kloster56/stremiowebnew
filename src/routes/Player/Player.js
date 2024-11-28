@@ -163,7 +163,7 @@ const Player = ({ urlParams, queryParams }) => {
     const onSeekRequested = React.useCallback((time) => {
         video.setProp('time', time);
         seek(time, video.state.duration, video.state.manifest?.name);
-    }, [video.state.time, video.state.duration, video.state.manifest]);
+    }, [video.state.duration, video.state.manifest]);
 
     const onPlaybackSpeedChanged = React.useCallback((rate) => {
         video.setProp('playbackSpeed', rate);
