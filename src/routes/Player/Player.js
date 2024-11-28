@@ -476,11 +476,6 @@ const Player = ({ urlParams, queryParams }) => {
 
                     break;
                 }
-                // make sure to set Seeking (if not set already)
-                // and update the time property to send the Seek Action
-                // accordingly.
-                // Continuously holding the arrow key should not trigger TimeChanged
-                // until releasing.
                 case 'ArrowRight': {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
                         const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
@@ -490,11 +485,6 @@ const Player = ({ urlParams, queryParams }) => {
 
                     break;
                 }
-                // make sure to set Seeking (if not set already)
-                // and update the time property to send the Seek Action
-                // accordingly.
-                // Continuously holding the arrow key should not trigger TimeChanged
-                // until releasing.
                 case 'ArrowLeft': {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
                         const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
