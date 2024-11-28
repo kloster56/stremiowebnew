@@ -15,13 +15,10 @@ type Props = {
 };
 
 const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
-    const [active, today, past] = useMemo(() => {
-        const active = date.day === selected?.day;
-        const today = date.day === monthInfo.today;
-        const past = date.day < (monthInfo.today ?? 1);
-
-        return [active, today, past];
-    }, [selected, monthInfo, date]);
+    const [active, today] = useMemo(() => [
+        date.day === selected?.day,
+        date.day === monthInfo.today,
+    ], [selected, monthInfo, date]);
 
     const onCellClick = () => {
         onClick && onClick(date);
@@ -29,7 +26,7 @@ const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
 
     return (
         <Button
-            className={classNames(styles['cell'], { [styles['active']]: active, [styles['today']]: today, [styles['past']]: past })}
+            className={classNames(styles['cell'], { [styles['active']]: active, [styles['today']]: today })}
             onClick={onCellClick}
         >
             <div className={styles['heading']}>

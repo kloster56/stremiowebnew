@@ -20,13 +20,10 @@ const Item = ({ selected, monthInfo, date, items, profile, onClick }: Props) => 
     const ref = useRef<HTMLDivElement>(null);
     const { toDayMonth } = useCalendarDate(profile);
 
-    const [active, today, past] = useMemo(() => {
-        const active = date.day === selected?.day;
-        const today = date.day === monthInfo.today;
-        const past = date.day < (monthInfo.today ?? 1);
-
-        return [active, today, past];
-    }, [selected, monthInfo, date]);
+    const [active, today] = useMemo(() => [
+        date.day === selected?.day,
+        date.day === monthInfo.today,
+    ], [selected, monthInfo, date]);
 
     const onItemClick = () => {
         onClick && onClick(date);
@@ -42,7 +39,7 @@ const Item = ({ selected, monthInfo, date, items, profile, onClick }: Props) => 
     return (
         <div
             ref={ref}
-            className={classNames(styles['item'], { [styles['active']]: active, [styles['today']]: today, [styles['past']]: past })}
+            className={classNames(styles['item'], { [styles['active']]: active, [styles['today']]: today })}
             key={date.day}
             onClick={onItemClick}
         >
