@@ -1,0 +1,95 @@
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.selector {
+    flex: none;
+    position: relative;
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+    justify-content: center;
+
+    .prev, .next {
+        position: relative;
+        height: 3rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        border-radius: 0.5rem;
+        transition: background-color 0.1s ease-out;
+
+        .label, .icon {
+            color: var(--primary-foreground-color);
+            opacity: 0.5;
+            transition: opacity 0.1s ease-out;
+        }
+
+        .label {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .icon {
+            height: 1.5rem;
+        }
+
+        &:hover {
+            .label, .icon {
+                opacity: 1;
+            }
+
+            background-color: var(--overlay-color);
+        }
+    }
+
+    .prev {
+        padding-left: 0.5rem;
+        padding-right: 1rem;
+    }
+
+    .next {
+        padding-left: 1rem;
+        padding-right: 0.5rem;
+    }
+
+    .selected {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        .year {
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: 100%;
+            color: var(--primary-foreground-color);
+            opacity: 0.5;
+        }
+
+        .month {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--primary-foreground-color);
+            white-space: nowrap;
+        }
+    }
+}
+
+@media only screen and (max-width: @small) {
+    .selector {
+        .prev, .next {
+            position: absolute;
+        }
+
+        .prev {
+            left: 1rem;
+        }
+
+        .next {
+            right: 1rem;
+        }
+    }
+}

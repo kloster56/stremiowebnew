@@ -1,14 +1,14 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React, { useMemo, useState } from 'react';
-import { MainNavBars, PaginationInput, BottomSheet, useProfile, withCoreSuspender } from 'stremio/common';
+import { MainNavBars, BottomSheet, useProfile, withCoreSuspender } from 'stremio/common';
+import Selector from './Selector';
 import Table from './Table';
 import List from './List';
 import Details from './Details';
 import Placeholder from './Placeholder';
 import useCalendar from './useCalendar';
 import useCalendarDate from './useCalendarDate';
-import useSelectableInputs from './useSelectableInputs';
 import styles from './Calendar.less';
 
 type Props = {
@@ -19,7 +19,6 @@ const Calendar = ({ urlParams }: Props) => {
     const calendar = useCalendar(urlParams);
     const profile = useProfile();
 
-    const [paginationInput] = useSelectableInputs(calendar, profile);
     const { toDayMonth } = useCalendarDate(profile);
 
     const [selected, setSelected] = useState<CalendarDate | null>(null);
@@ -36,14 +35,11 @@ const Calendar = ({ urlParams }: Props) => {
                 profile.auth !== null ?
                     <div className={styles['content']}>
                         <div className={styles['main']}>
-                            <div className={styles['inputs']}>
-                                {
-                                    paginationInput !== null ?
-                                        <PaginationInput {...paginationInput} className={styles['pagination-input']} />
-                                        :
-                                        null
-                                }
-                            </div>
+                            <Selector
+                                selected={calendar.selected}
+                                selectable={calendar.selectable}
+                                profile={profile}
+                            />
                             <Table
                                 items={calendar.items}
                                 selected={selected}
