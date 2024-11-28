@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2024 Smart code 203358507
+
 import React, { useCallback, useMemo } from 'react';
 import Icon from '@stremio/stremio-icons/react';
 import { Button } from 'stremio/common';
