@@ -82,6 +82,11 @@ const EXTERNAL_PLAYERS = [
         platforms: ['ios', 'visionos'],
     },
     {
+        label: 'Infuse',
+        value: 'infuse',
+        platforms: ['ios'],
+    },
+    {
         label: 'Moonplayer (VisionOS)',
         value: 'moonplayer',
         platforms: ['visionos'],
